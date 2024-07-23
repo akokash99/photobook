@@ -1,70 +1,135 @@
-# Getting Started with Create React App
+# Photobook App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+Photobook is a modern, React-based web application that allows users to create and manage digital photobooks. Users can upload photos, add metadata, and organize their memories in a sleek, user-friendly interface.
 
-In the project directory, you can run:
+![Photobook App Overview](https://via.placeholder.com/800x400.png?text=Photobook+App+Overview)
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Google Authentication
+- Create up to 10 photobooks per user
+- Add up to 20 photos per photobook
+- Add metadata to photos (title, film stock, people, location, caption, event)
+- View photobooks in a carousel layout
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Architecture
 
-### `npm test`
+The Photobook app is built using React for the frontend and Firebase for backend services. Here's a high-level overview of the architecture:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```mermaid
+graph TD
+    A[React Frontend] -->|Authenticates| B[Firebase Auth]
+    A -->|Stores/Retrieves Data| C[Firestore]
+    A -->|Uploads/Downloads Photos| D[Firebase Storage]
+    E[User] -->|Interacts with| A
+```
 
-### `npm run build`
+## Component Structure
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The app is composed of several key components:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```mermaid
+graph TD
+    A[App] --> B[AuthProvider]
+    A --> C[Router]
+    C --> D[Authentication]
+    C --> E[Home]
+    C --> F[CreatePhotobook]
+    C --> G[ViewPhotobooks]
+    F --> H[LoadingSpinner]
+    G --> H
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## User Flow
 
-### `npm run eject`
+The typical user flow in the Photobook app is as follows:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```mermaid
+graph TD
+    A[User Login] --> B{Authenticated?}
+    B -->|Yes| C[View Photobooks]
+    B -->|No| A
+    C --> D{Create New?}
+    D -->|Yes| E[Create Photobook]
+    D -->|No| F[View Existing]
+    E --> G{Add Photos}
+    G -->|Yes| H[Add Metadata]
+    G -->|No| I[Save Photobook]
+    H --> I
+    I --> C
+    F --> C
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Setup and Installation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Clone the repository:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   ```
+   git clone https://github.com/yourusername/photobook-app.git
+   ```
 
-## Learn More
+2. Install dependencies:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   ```
+   cd photobook-app
+   npm install
+   ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+3. Set up Firebase:
 
-### Code Splitting
+   - Create a new Firebase project
+   - Enable Authentication, Firestore, and Storage
+   - Add your Firebase configuration to `.env` file:
+     ```
+     REACT_APP_FIREBASE_API_KEY=your_api_key
+     REACT_APP_FIREBASE_AUTH_DOMAIN=your_auth_domain
+     REACT_APP_FIREBASE_PROJECT_ID=your_project_id
+     REACT_APP_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+     REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+     REACT_APP_FIREBASE_APP_ID=your_app_id
+     ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+4. Run the app:
+   ```
+   npm start
+   ```
 
-### Analyzing the Bundle Size
+## Key Components
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### CreatePhotobook
 
-### Making a Progressive Web App
+The CreatePhotobook component allows users to create a new photobook. It includes features like:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- Photo upload (max 20 photos)
+- Metadata input for each photo
+- Loading spinner during photobook creation
 
-### Advanced Configuration
+![CreatePhotobook Component](https://via.placeholder.com/600x400.png?text=CreatePhotobook+Component)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### ViewPhotobooks
 
-### Deployment
+The ViewPhotobooks component displays all photobooks created by the user. It includes:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- Carousel display of photos in each photobook
+- Metadata display for each photo
+- Create new photobook button (disabled if limit reached)
 
-### `npm run build` fails to minify
+![ViewPhotobooks Component](https://via.placeholder.com/600x400.png?text=ViewPhotobooks+Component)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Limitations and Future Enhancements
+
+- Current limit: 10 photobooks per user, 20 photos per photobook
+- Future enhancements may include:
+  - Sharing photobooks with other users
+  - Exporting photobooks as PDFs
+  - Adding video support
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License.
