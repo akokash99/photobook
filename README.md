@@ -20,10 +20,65 @@ The Photobook app is built using React for the frontend and Firebase for backend
 
 ```mermaid
 graph TD
-    A[React Frontend] -->|Authenticates| B[Firebase Auth]
-    A -->|Stores/Retrieves Data| C[Firestore]
-    A -->|Uploads/Downloads Photos| D[Firebase Storage]
-    E[User] -->|Interacts with| A
+    subgraph Frontend
+        A[App.js] --> B[AuthProvider]
+        A --> C[ThemeProvider]
+        A --> D[Router]
+        D --> E[Authentication]
+        D --> F[Home]
+        D --> G[CreatePhotobook]
+        D --> H[ViewPhotobooks]
+        B --> I[useAuth Hook]
+        G --> J[Firebase Storage]
+        G --> K[Firestore]
+        H --> K
+    end
+
+    subgraph Backend
+        L[Firebase Authentication]
+        M[Firebase Cloud Storage]
+        N[Firebase Firestore]
+    end
+
+    subgraph Components
+        E --> I
+        F --> I
+        G --> I
+        H --> I
+    end
+
+    subgraph Styling
+        C --> O[styled-components]
+        O --> P[Global Styles]
+        O --> Q[Theme]
+    end
+
+    I -.-> L
+    J -.-> M
+    K -.-> N
+
+    subgraph Legend
+        Z1[React Components]
+        Z2[Providers/Hooks]
+        Z3[Backend Services]
+        Z4[Styling]
+    end
+
+    classDef component fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    classDef provider fill:#fff9c4,stroke:#f57f17,stroke-width:2px;
+    classDef backend fill:#c8e6c9,stroke:#1b5e20,stroke-width:2px;
+    classDef styling fill:#f8bbd0,stroke:#880e4f,stroke-width:2px;
+
+    class A,E,F,G,H,Z1 component;
+    class B,C,I,Z2 provider;
+    class L,M,N,Z3 backend;
+    class O,P,Q,Z4 styling;
+
+    style Frontend fill:#f5f5f5,stroke:#616161,stroke-width:2px;
+    style Backend fill:#f5f5f5,stroke:#616161,stroke-width:2px;
+    style Components fill:#f5f5f5,stroke:#616161,stroke-width:2px;
+    style Styling fill:#f5f5f5,stroke:#616161,stroke-width:2px;
+    style Legend fill:#ffffff,stroke:#333,stroke-width:2px;
 ```
 
 ## Component Structure
