@@ -16,7 +16,7 @@ Photobook is a modern, React-based web application that allows users to create a
 
 ## Architecture
 
-The Photobook app is built using React for the frontend and Firebase for backend services. Here's a high-level overview of the architecture:
+The Photobook app is built using React for the frontend and Firebase for backend services. Here's a high-level overview of the architecture :
 
 ```mermaid
 graph TD
