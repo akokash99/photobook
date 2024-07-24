@@ -108,6 +108,57 @@ const EditForm = styled.form`
   border-radius: 8px;
 `;
 
+const GroupBySelect = styled.select`
+  appearance: none; // Remove default styling
+  background-color: rgba(225, 227, 172, 0.15);
+  border: 0px solid ${(props) => props.theme.colors.secondary}; // Teal border
+  border-radius: 8px;
+  padding: 12px 36px 12px 16px; // Extra padding on the right for the custom arrow
+  font-size: 16px;
+  color: ${(props) => props.theme.colors.text};
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+
+  // Custom arrow
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%232EC4B6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+
+  &:hover {
+    border-color: ${(props) => props.theme.colors.primary}; // Orange on hover
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: ${(props) => props.theme.colors.primary};
+    box-shadow: 0 0 0 3px rgba(46, 196, 182, 0.3); // Teal focus ring
+  }
+
+  // Style for the options
+  option {
+    background: white;
+    color: ${(props) => props.theme.colors.text};
+    padding: 8px;
+  }
+`;
+
+const GroupByLabel = styled.label`
+  font-weight: bold;
+  margin-right: 10px;
+  color: ${(props) => props.theme.colors.secondary};
+`;
+const GroupContainer = styled.div`
+  margin-bottom: 30px;
+`;
+
+const GroupTitle = styled.h2`
+  margin-bottom: 15px;
+  color: ${(props) => props.theme.colors.primary};
+`;
+
 const SinglePhotobook = () => {
   const { id } = useParams();
   const { user } = useAuth();
@@ -117,6 +168,7 @@ const SinglePhotobook = () => {
   const [fullScreenPhoto, setFullScreenPhoto] = useState(null);
   const [editingPhoto, setEditingPhoto] = useState(null);
   const [savingChanges, setSavingChanges] = useState(false);
+  const [groupBy, setGroupBy] = useState("none");
 
   useEffect(() => {
     const fetchPhotobook = async () => {
@@ -162,6 +214,54 @@ const SinglePhotobook = () => {
     return value || "";
   };
 
+  const groupPhotos = (photos, metric) => {
+    if (metric === "none") return { "All Photos": photos };
+
+    return photos.reduce((groups, photo) => {
+      const key = Array.isArray(photo[metric])
+        ? photo[metric].join(", ")
+        : photo[metric] || "Unspecified";
+      if (!groups[key]) {
+        groups[key] = [];
+      }
+      groups[key].push(photo);
+      return groups;
+    }, {});
+  };
+
+  const renderGroupedPhotos = () => {
+    const groupedPhotos = groupPhotos(photobook.photos, groupBy);
+
+    return Object.entries(groupedPhotos).map(([group, photos]) => (
+      <GroupContainer key={group}>
+        <GroupTitle>{group}</GroupTitle>
+        <PhotoGrid>
+          {photos.map((photo, index) => renderPhotoCard(photo, index))}
+        </PhotoGrid>
+      </GroupContainer>
+    ));
+  };
+
+  const renderPhotoCard = (photo, index) => (
+    <PhotoCard key={photo.url || index}>
+      <PhotoImage
+        src={photo.url}
+        alt={photo.title}
+        onClick={() => setFullScreenPhoto(photo)}
+      />
+      <PhotoInfo>
+        <PhotoTitle>{photo.title}</PhotoTitle>
+        <InfoItem>Film Stock: {safeJoin(photo.filmStock)}</InfoItem>
+        <InfoItem>People: {safeJoin(photo.people)}</InfoItem>
+        <InfoItem>Location: {photo.location || ""}</InfoItem>
+        <InfoItem>Event: {safeJoin(photo.event)}</InfoItem>
+        <EditButton onClick={() => setEditingPhoto({ ...photo })}>
+          Edit
+        </EditButton>
+      </PhotoInfo>
+    </PhotoCard>
+  );
+
   if (loading) return <LoadingSpinner />;
   if (!photobook) return <div>Photobook not found</div>;
 
@@ -169,27 +269,27 @@ const SinglePhotobook = () => {
     <Container>
       <Title>{photobook.title}</Title>
       <Description>{photobook.description}</Description>
-      <PhotoGrid>
-        {photobook.photos.map((photo, index) => (
-          <PhotoCard key={photo.url || index}>
-            <PhotoImage
-              src={photo.url}
-              alt={photo.title}
-              onClick={() => setFullScreenPhoto(photo)}
-            />
-            <PhotoInfo>
-              <PhotoTitle>{photo.title}</PhotoTitle>
-              <InfoItem>Film Stock: {safeJoin(photo.filmStock)}</InfoItem>
-              <InfoItem>People: {safeJoin(photo.people)}</InfoItem>
-              <InfoItem>Location: {photo.location || ""}</InfoItem>
-              <InfoItem>Event: {safeJoin(photo.event)}</InfoItem>
-              <EditButton onClick={() => setEditingPhoto({ ...photo })}>
-                Edit
-              </EditButton>
-            </PhotoInfo>
-          </PhotoCard>
-        ))}
-      </PhotoGrid>
+      <div>
+        {/* <GroupByLabel htmlFor="group-by">Group photos by:</GroupByLabel> */}
+        <GroupBySelect
+          value={groupBy}
+          onChange={(e) => setGroupBy(e.target.value)}
+        >
+          <option value="none">No Grouping</option>
+          <option value="filmStock">Group by Film Stock</option>
+          <option value="people">Group by People</option>
+          <option value="event">Group by Event</option>
+        </GroupBySelect>
+      </div>
+      {groupBy === "none" ? (
+        <PhotoGrid>
+          {photobook.photos.map((photo, index) =>
+            renderPhotoCard(photo, index)
+          )}
+        </PhotoGrid>
+      ) : (
+        renderGroupedPhotos()
+      )}
 
       {fullScreenPhoto && (
         <FullScreenOverlay onClick={() => setFullScreenPhoto(null)}>
