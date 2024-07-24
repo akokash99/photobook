@@ -16,6 +16,7 @@ import Home from "./components/Home";
 import Navbar from "./components/Navbar";
 import ViewPhotobooks from "./components/ViewPhotobooks";
 import CreatePhotobook from "./components/CreatePhotobook";
+import SinglePhotobook from "./components/SinglePhotobook";
 
 const PrivateRoute = ({ children }) => {
   const { user } = useAuth();
@@ -57,6 +58,7 @@ const AppRoutes = () => {
             </PrivateRoute>
           }
         />
+        <Route path="/photobook/:id" element={<SinglePhotobook />} />
       </Routes>
     </>
   );

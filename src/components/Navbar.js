@@ -1,4 +1,3 @@
-// src/components/Navbar.js
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -20,6 +19,11 @@ const NavList = styled.ul`
   align-items: center;
 `;
 
+const NavItems = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const NavItem = styled.li`
   margin-right: 1.5rem;
   &:last-child {
@@ -27,13 +31,16 @@ const NavItem = styled.li`
   }
 `;
 
-const NavLink = styled(Link)`
+const NavLinkStyles = `
   color: ${theme.colors.text};
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
   padding: 0.5rem 0;
   position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
 
   &:after {
     content: "";
@@ -42,14 +49,35 @@ const NavLink = styled(Link)`
     left: 0;
     width: 0;
     height: 2px;
-    background-color: ${(props) =>
-      props.isActive ? theme.colors.primary : theme.colors.secondary};
+    background-color: ${theme.colors.secondary};
     transition: width 0.3s ease;
   }
 
-  &:hover:after,
-  &.active:after {
+  &:hover:after {
     width: 100%;
+  }
+
+  &:hover {
+    color: ${theme.colors.text};
+  }
+`;
+
+const NavLink = styled(Link)`
+  ${NavLinkStyles}
+`;
+
+const LogoutButton = styled.button`
+  ${NavLinkStyles}
+  font-family: inherit;
+  outline: none;
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: ${theme.colors.text};
+    background: none;
+    border: none;
+    outline: none;
   }
 `;
 
@@ -58,19 +86,6 @@ const Logo = styled(Link)`
   font-weight: bold;
   color: ${theme.colors.primary};
   text-decoration: none;
-`;
-
-const LogoutButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: ${theme.colors.text};
-  font-size: 1rem;
-  font-weight: 500;
-
-  &:hover {
-    color: ${theme.colors.primary};
-  }
 `;
 
 const Navbar = () => {
@@ -91,7 +106,7 @@ const Navbar = () => {
     <NavbarContainer>
       <NavList>
         <Logo to="/home">Photobook</Logo>
-        <div style={{ display: "flex" }}>
+        <NavItems>
           <NavItem>
             <NavLink to="/home" isActive={location.pathname === "/home"}>
               Home
@@ -110,7 +125,7 @@ const Navbar = () => {
           <NavItem>
             <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
           </NavItem>
-        </div>
+        </NavItems>
       </NavList>
     </NavbarContainer>
   );

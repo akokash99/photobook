@@ -28,7 +28,7 @@ const PhotobookList = styled.ul`
 `;
 
 const PhotobookItem = styled.li`
-  background-color: white;
+  background-color: rgba(225, 227, 172, 0.15);
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -142,6 +142,22 @@ const ErrorMessage = styled.p`
   margin-bottom: 20px;
 `;
 
+const ViewButton = styled(Link)`
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: ${(props) => props.theme.colors.secondary};
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: ${(props) => props.theme.colors.primary};
+  }
+`;
+
 const ViewPhotobooks = () => {
   const [photobooks, setPhotobooks] = useState([]);
   const [error, setError] = useState("");
@@ -237,6 +253,9 @@ const ViewPhotobooks = () => {
               <CreatedDate>
                 Created: {book.createdAt.toDate().toLocaleDateString()}
               </CreatedDate>
+              <ViewButton to={`/photobook/${book.id}`}>
+                View Full Photobook
+              </ViewButton>
             </PhotobookContent>
           </PhotobookItem>
         ))}

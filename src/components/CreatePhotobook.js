@@ -6,8 +6,10 @@ import { addDoc, collection } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../firebase/config";
 import { useNavigate } from "react-router-dom";
-import { getPhotobookCount } from "../utils/firebaseUtils";
+import { getPhotobookCount, addUserTag } from "../utils/firebaseUtils";
+
 import LoadingSpinner from "./LoadingSpinner";
+import TagInput from "./TagInput"; // Import the new TagInput component
 
 const Container = styled.div`
   max-width: 800px;
@@ -102,12 +104,12 @@ const ImagePreview = styled.img`
   margin-bottom: 10px;
 `;
 
-const TagInput = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 10px;
-`;
+// const TagInput = styled.div`
+//   display: flex;
+//   flex-wrap: wrap;
+//   gap: 5px;
+//   margin-bottom: 10px;
+// `;
 
 const Tag = styled.span`
   background-color: ${(props) => props.theme.colors.secondary};
@@ -197,11 +199,11 @@ const CreatePhotobook = () => {
         file,
         preview: URL.createObjectURL(file),
         title: "",
-        filmStock: "",
+        filmStock: [],
         people: [],
         location: "",
         caption: "",
-        event: "",
+        event: [],
       }));
 
       if (photos.length + newPhotos.length > 20) {
@@ -215,10 +217,17 @@ const CreatePhotobook = () => {
   };
 
   // ... (previous handlePhotoMetadataChange, handleAddTag, handleRemoveTag functions remain the same)
-  const handlePhotoMetadataChange = (index, field, value) => {
+  const handlePhotoMetadataChange = async (index, field, value) => {
     const updatedPhotos = [...photos];
     updatedPhotos[index][field] = value;
     setPhotos(updatedPhotos);
+
+    // If the field is filmStock, people, or event, update the user's tags
+    if (["filmStock", "people", "event"].includes(field)) {
+      for (const tag of value) {
+        await addUserTag(user.uid, field, tag);
+      }
+    }
   };
 
   const handleAddTag = (index, field) => {
@@ -352,38 +361,20 @@ const CreatePhotobook = () => {
                   handlePhotoMetadataChange(index, "title", e.target.value)
                 }
               />
-              <Input
-                type="text"
-                placeholder="Film Stock"
+              <TagInput
+                tagType="filmStock"
                 value={photo.filmStock}
-                onChange={(e) =>
-                  handlePhotoMetadataChange(index, "filmStock", e.target.value)
+                onChange={(value) =>
+                  handlePhotoMetadataChange(index, "filmStock", value)
                 }
               />
-              <Input
-                type="text"
-                placeholder="Add People"
-                value={photo.person || ""}
-                onChange={(e) =>
-                  handlePhotoMetadataChange(index, "person", e.target.value)
-                }
-                onKeyPress={(e) =>
-                  e.key === "Enter" && handleAddTag(index, "person")
+              <TagInput
+                tagType="people"
+                value={photo.people}
+                onChange={(value) =>
+                  handlePhotoMetadataChange(index, "people", value)
                 }
               />
-              <TagInput>
-                {photo.people &&
-                  photo.people.map((person, i) => (
-                    <Tag key={i}>
-                      {person}
-                      <RemoveTagButton
-                        onClick={() => handleRemoveTag(index, "person", person)}
-                      >
-                        ×
-                      </RemoveTagButton>
-                    </Tag>
-                  ))}
-              </TagInput>
               <Input
                 type="text"
                 placeholder="Location"
@@ -399,12 +390,11 @@ const CreatePhotobook = () => {
                   handlePhotoMetadataChange(index, "caption", e.target.value)
                 }
               />
-              <Input
-                type="text"
-                placeholder="Event"
+              <TagInput
+                tagType="event"
                 value={photo.event}
-                onChange={(e) =>
-                  handlePhotoMetadataChange(index, "event", e.target.value)
+                onChange={(value) =>
+                  handlePhotoMetadataChange(index, "event", value)
                 }
               />
             </ImageMetadataContainer>
