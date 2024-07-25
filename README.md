@@ -161,7 +161,7 @@ The CreatePhotobook component allows users to create a new photobook. It include
 - Metadata input for each photo
 - Loading spinner during photobook creation
 
-![CreatePhotobook Component](https://via.placeholder.com/600x400.png?text=CreatePhotobook+Component)
+
 
 ### ViewPhotobooks
 
@@ -171,7 +171,7 @@ The ViewPhotobooks component displays all photobooks created by the user. It inc
 - Metadata display for each photo
 - Create new photobook button (disabled if limit reached)
 
-![ViewPhotobooks Component](https://via.placeholder.com/600x400.png?text=ViewPhotobooks+Component)
+
 
 ## Limitations and Future Enhancements
 
