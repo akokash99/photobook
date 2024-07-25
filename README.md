@@ -6,6 +6,9 @@ Photobook is a modern, React-based web application that allows users to create a
 
 ![Screenshot 2024-07-24 154947](https://github.com/user-attachments/assets/1876b683-bd86-41c8-a9dd-4984db7b612b)
 
+![Screenshot 2024-07-25 113349](https://github.com/user-attachments/assets/c5069a6d-9876-41a7-b21a-1379a0ad83e5)
+
+![Screenshot 2024-07-25 113413](https://github.com/user-attachments/assets/f17f6094-5e07-46f8-8ee4-5571f569d529)
 
 ## Features
 
