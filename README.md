@@ -4,7 +4,8 @@
 
 Photobook is a modern, React-based web application that allows users to create and manage digital photobooks. Users can upload photos, add metadata, and organize their memories in a sleek, user-friendly interface.
 
-![Photobook App Overview](https://via.placeholder.com/800x400.png?text=Photobook+App+Overview)
+![Screenshot 2024-07-24 154947](https://github.com/user-attachments/assets/1876b683-bd86-41c8-a9dd-4984db7b612b)
+
 
 ## Features
 
@@ -161,7 +162,7 @@ The CreatePhotobook component allows users to create a new photobook. It include
 - Metadata input for each photo
 - Loading spinner during photobook creation
 
-![CreatePhotobook Component](https://via.placeholder.com/600x400.png?text=CreatePhotobook+Component)
+
 
 ### ViewPhotobooks
 
@@ -171,7 +172,7 @@ The ViewPhotobooks component displays all photobooks created by the user. It inc
 - Metadata display for each photo
 - Create new photobook button (disabled if limit reached)
 
-![ViewPhotobooks Component](https://via.placeholder.com/600x400.png?text=ViewPhotobooks+Component)
+
 
 ## Limitations and Future Enhancements
 
