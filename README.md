@@ -4,7 +4,7 @@
 
 Photobook is a modern, React-based web application that allows users to create and manage digital photobooks. Users can upload photos, add metadata, and organize their memories in a sleek, user-friendly interface.
 
-![Photobook App Overview](https://via.placeholder.com/800x400.png?text=Photobook+App+Overview)
+
 
 ## Features
 
